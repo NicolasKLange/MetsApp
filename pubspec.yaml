@@ -1,0 +1,34 @@
+name: mets_app
+description: "A new Flutter project."
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_sign_in: ^6.2.2
+  firebase_auth: ^5.5.1
+  get: ^4.7.2
+  firebase_core: ^3.12.1
+  provider: ^6.1.2
+  path_provider: ^2.1.5
+  cloud_firestore: ^5.6.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - lib/assets/images/logoApp.png
+    - lib/assets/images/signInGoogle.png
+    - lib/assets/images/metsApp.png
+    - lib/assets/images/logoMetsApp.png
