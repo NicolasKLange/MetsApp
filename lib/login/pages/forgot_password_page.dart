@@ -40,17 +40,18 @@ class _ForgotPasswoardPageState extends State<ForgotPasswoardPage> {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: emailController.text.trim(),
       );
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: const Color(0xFF0F9E99),
-            content: Text(
-              'Link para aleterar senha enviado! Olhe seu email',
-              style: TextStyle(color: const Color(0xFFEDE8E8), fontSize: 17),
-            ),
-          );
-        },
+      Get.snackbar(
+        'Sucesso',
+        '',
+        backgroundColor: const Color(0xFF135452),
+        colorText: const Color(0xFFEFE9E0),
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(8.0),
+        duration: const Duration(seconds: 3),
+        messageText: Text(
+          'Link de redefinição de senha enviado para seu email',
+          style: TextStyle(fontSize: 15, color: Color(0xFFEFE9E0)),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       showErrorMessage(e.code);
@@ -136,9 +137,9 @@ class _ForgotPasswoardPageState extends State<ForgotPasswoardPage> {
                   style: const TextStyle(
                     color: Color(0xFFEFE9E0),
                     fontWeight: FontWeight.bold,
-                    fontSize: 18, 
+                    fontSize: 18,
                   ),
-                ),  
+                ),
               ),
             ),
           ),

@@ -58,12 +58,16 @@ class _LoginPageState extends State<LoginPage> {
   void showErrorMessage(String message) {
     Get.snackbar(
       'Erro de Login',
-      'Verifique seu email ou senha',
-      backgroundColor: const Color(0xFF2B3649),
-      colorText: const Color(0xFFEDE8E8),
-      snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(8.0),
-      duration: const Duration(seconds: 3),
+      '',
+      backgroundColor: const Color(0xFF135452),
+        colorText: const Color(0xFFEFE9E0),
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(8.0),
+        duration: const Duration(seconds: 3),
+        messageText: Text(
+          'Verifique seu email ou senha',
+          style: TextStyle(fontSize: 15, color: Color(0xFFEFE9E0)),
+        ),
     );
   }
 
