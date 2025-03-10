@@ -5,10 +5,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final ValueChanged<int> onDestinationSelected;
 
   const CustomBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +19,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
         iconTheme: WidgetStatePropertyAll(
           IconThemeData(
             size: 30,
-            color: Color(0xFFEFE9E0), // Cor dos ícones não selecionados
+            color: Color(0xFFEFE9E0), // Ícones não selecionados
           ),
         ),
         // Indicador da aba selecionada
         indicatorColor: Color.fromARGB(99, 255, 255, 255),
-        backgroundColor: Color(0xFF0F9E99), // Cor de fundo da NavigationBar
+        backgroundColor: Color(0xFF0F9E99), 
 
-        // Editando o estilo de texto dos rótulos da NavigationBar
+        // Texto da navigationBar
         labelTextStyle: WidgetStatePropertyAll(
           TextStyle(
             fontSize: 15,
@@ -44,7 +44,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             icon: Icon(Icons.dashboard_outlined),
             selectedIcon: Icon(
               Icons.dashboard_rounded,
-              color: Color(0xFF135452),
+              color: Color(0xFFEFE9E0),
             ),
             label: "Dashboard",
           ),
@@ -52,7 +52,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             icon: Icon(Icons.list_rounded),
             selectedIcon: Icon(
               Icons.list_rounded,
-              color: Color(0xFF135452),
+              color: Color(0xFFEFE9E0),
             ),
             label: "Metas",
           ),
@@ -60,7 +60,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             icon: Icon(Icons.person_2_outlined),
             selectedIcon: Icon(
               Icons.person_2,
-              color: Color(0xFF135452), 
+              color: Color(0xFFEFE9E0), 
             ),
             label: "Perfil",
           ),

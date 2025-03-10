@@ -7,7 +7,97 @@ import 'package:mets_app/assets/componentes/navigation_bar/custom_navigation_bar
 import 'package:mets_app/screens/mets/mets_screen.dart';
 import 'package:mets_app/screens/profile/profile_screen.dart';
 
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+//Classe dashboard para boas vindas e metas do usuário
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0XFFEFE9E0),
+      //Body da home screen
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //Texto de boas vindas para o usuário
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 70.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Seja bem vindo',
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0XFF0F9E99),
+                  ),
+                ),
+                Text(
+                  'Nicolas Lange',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w300,
+                    color: Color(0XFF0F9E99),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 100),
+          //Metas do usuário
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, right: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Suas metas para o ano de 2025',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0XFF0F9E99),
+                  ),
+                ),
+                Spacer(),
+                GestureDetector(
+                  //Adicionar função para navegar para a tela de metas
+                  onTap: () {},
+                  child: Icon(Icons.add, color: Color(0XFF0F9E99)),
+                ),
+              ],
+            ),
+          ),
+          //Lista das metas do usuário
+          Expanded(
+            //ListView para o usuário poder visualizar todas suas metas
+            child: ListView(
+              children: [
+                CardMetsStyle(
+                  title: 'Atividades Físicas',
+                  startDate: '05/02/2025',
+                  endDate: '30/08/2025',
+                ),
+                CardMetsStyle(
+                  title: 'Leitura',
+                  startDate: '01/01/2025',
+                  endDate: '30/12/2025',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+//Classe home para deixar appBar e navigationBar padronizados para o app
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -15,7 +105,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> { 
+class _HomeScreenState extends State<HomeScreen> {
   int _opcaoSelecionada = 0;
   @override
   Widget build(BuildContext context) {
@@ -169,96 +259,5 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text("Erro ao deslogar: $e")));
     }
-  }
-}
-
-
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
-
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> { 
-  int _opcaoSelecionada = 0;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0XFFEFE9E0),
-      //Body da home screen
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //Texto de boas vindas para o usuário
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 70.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Seja bem vindo',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-                Text(
-                  'Nicolas Lange',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 100),
-          //Metas do usuário
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, right: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Suas metas para o ano de 2025',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  //Adicionar função para navegar para a tela de metas
-                  onTap: () {},
-                  child: Icon(Icons.add, color: Color(0XFF0F9E99)),
-                ),
-              ],
-            ),
-          ),
-          //Lista das metas do usuário
-          Expanded(
-            //ListView para o usuário poder visualizar todas suas metas
-            child: ListView(
-              children: [
-                CardMetsStyle(
-                  title: 'Atividades Físicas',
-                  startDate: '05/02/2025',
-                  endDate: '30/08/2025',
-                ),
-                CardMetsStyle(
-                  title: 'Leitura',
-                  startDate: '01/01/2025',
-                  endDate: '30/12/2025',
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

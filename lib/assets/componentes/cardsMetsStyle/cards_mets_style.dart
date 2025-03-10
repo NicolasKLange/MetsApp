@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//Classe do card com as metas, com titulo, data de inicio e fim da meta
+// Classe do card com as metas, com titulo, data de inicio e fim da meta
 class CardMetsStyle extends StatelessWidget {
   final String title;
   final String startDate;
