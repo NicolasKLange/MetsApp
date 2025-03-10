@@ -1,48 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mets_app/assets/componentes/cardsMetsStyle/cards_mets_style.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFEFE9E0),
-      //App bar do aplicativo
+      body: Center(child: Text('Perfil')),
       appBar: AppBar(
-        backgroundColor: Color(0XFF0F9E99),
+        backgroundColor: Color(0XFFEFE9E0),
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                'M',
-                style: TextStyle(
-                  color: Color(0XFFEFE9E0),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 35,
-                ),
-              ),
-              Text(
-                'ets',
-                style: TextStyle(
-                  color: Color(0XFFEFE9E0),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              ),
+              Text('M', style: TextStyle(color: Color(0XFF0F9E99), fontWeight: FontWeight.bold, fontSize: 35),),
+              Text('ets', style: TextStyle(color: Color(0XFF0F9E99), fontWeight: FontWeight.bold, fontSize: 30),),
               //Espaço entre o texto e icon
               const Spacer(),
               IconButton(
-                icon: const Icon(Icons.logout, color: Color(0XFFEFE9E0)),
+                icon: const Icon(Icons.logout, color: Color(0XFF0F9E99)),
                 onPressed: () => _showOptionsModal(context),
               ),
             ],
@@ -50,80 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         //Retira o botão de voltar
         automaticallyImplyLeading: false,
-      ),
-
-      //Body da home screen
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //Texto de boas vindas para o usuário
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 70.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Seja bem vindo',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-                Text(
-                  'Nicolas Lange',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 100),
-          //Metas do usuário
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, right: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Suas metas para o ano de 2025',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  //Adicionar função para navegar para a tela de metas
-                  onTap: () {},
-                  child: Icon(Icons.add, color: Color(0XFF0F9E99)),
-                ),
-              ],
-            ),
-          ),
-          //Lista das metas do usuário
-          Expanded(
-            //ListView para o usuário poder visualizar todas suas metas
-            child: ListView(
-              children: [
-                CardMetsStyle(
-                  title: 'Atividades Físicas',
-                  startDate: '05/02/2025',
-                  endDate: '30/08/2025',
-                ),
-                CardMetsStyle(
-                  title: 'Leitura',
-                  startDate: '01/01/2025',
-                  endDate: '30/12/2025',
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
