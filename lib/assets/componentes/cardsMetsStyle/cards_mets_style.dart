@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//Classe do card com as metas
+//Classe do card com as metas, com titulo, data de inicio e fim da meta
 class CardMetsStyle extends StatelessWidget {
   final String title;
   final String startDate;
@@ -38,6 +38,7 @@ class CardMetsStyle extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          //Título da meta
           Text(
             title,
             style: TextStyle(
@@ -47,6 +48,7 @@ class CardMetsStyle extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
+          //Dias de inicio e fim da meta
           Row(
             children: [
               Text(
@@ -61,6 +63,7 @@ class CardMetsStyle extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
+          //Linha de progressão da meta
           Container(
             height: 4,
             decoration: BoxDecoration(

@@ -13,24 +13,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBarTheme(
-      // Customizando o tema da NavigationBar
+      // Tema da NavigationBar
       data: const NavigationBarThemeData(
-        // Editando o tamanho e cor dos ícones da NavigationBar
+        // Tamanho e cor dos ícones da NavigationBar
         iconTheme: WidgetStatePropertyAll(
           IconThemeData(
             size: 30,
-            color: Color(0xFFEDE8E8), // Cor dos ícones não selecionados
+            color: Color(0xFFEFE9E0), // Cor dos ícones não selecionados
           ),
         ),
         // Indicador da aba selecionada
         indicatorColor: Color.fromARGB(99, 255, 255, 255),
-        backgroundColor: Color(0xFF577096), // Cor de fundo da NavigationBar
+        backgroundColor: Color(0xFF0F9E99), // Cor de fundo da NavigationBar
 
         // Editando o estilo de texto dos rótulos da NavigationBar
         labelTextStyle: WidgetStatePropertyAll(
           TextStyle(
             fontSize: 15,
-            color: Color(0xFFEDE8E8),
+            color: Color(0xFFEFE9E0),
           ),
         ),
       ),
@@ -41,26 +41,26 @@ class CustomBottomNavigationBar extends StatelessWidget {
         selectedIndex: selectedIndex,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.miscellaneous_services_rounded),
+            icon: Icon(Icons.dashboard_outlined),
             selectedIcon: Icon(
-              Icons.miscellaneous_services_rounded,
-              color: Color(0xFF577096), // Cor do ícone selecionado
+              Icons.dashboard_rounded,
+              color: Color(0xFF135452),
             ),
-            label: "Funcionalidades",
+            label: "Dashboard",
           ),
           NavigationDestination(
-            icon: Icon(Icons.family_restroom_outlined),
+            icon: Icon(Icons.list_rounded),
             selectedIcon: Icon(
-              Icons.family_restroom_sharp,
-              color: Color(0xFF577096),
+              Icons.list_rounded,
+              color: Color(0xFF135452),
             ),
-            label: "Familia",
+            label: "Metas",
           ),
           NavigationDestination(
             icon: Icon(Icons.person_2_outlined),
             selectedIcon: Icon(
               Icons.person_2,
-              color: Color(0xFF577096), // Cor do ícone selecionado
+              color: Color(0xFF135452), 
             ),
             label: "Perfil",
           ),

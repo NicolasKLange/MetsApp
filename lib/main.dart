@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mets_app/login/pages/auth_page.dart';
 import 'package:mets_app/screens/home/home_screen.dart';
+import 'package:mets_app/screens/mets/mets_screen.dart';
 import 'package:mets_app/screens/profile/profile_screen.dart';
 import 'firebase_options.dart';
 import 'package:get/get.dart';
@@ -26,8 +27,10 @@ class MetsApp extends StatelessWidget {
       //Rotas das páginas do aplicativo
       routes: {
         'authPage': (context) => const AuthPage(),
+        '/dashboardScreen': (context) => const DashboardScreen(),
         '/homeScreen': (context) => const HomeScreen(),
         '/profileScreen': (context) => const ProfileScreen(),
+        '/metsScreen': (context) => const MetsScreen(),
       },
     );
   }
