@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mets_app/database/database.dart';
-import 'package:pick_color/pick_color.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -65,7 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  
                   child: Text(
                     'Perfil',
                     style: TextStyle(
@@ -78,35 +77,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: _pickColor,
-                          child: Container(
-                            //sombra no avatar
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF577096),
-                                  spreadRadius: 2,
-                                  blurRadius: 10,
-                                  offset: const Offset(2, 4),
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 50,
-                              backgroundColor: avatarColor,
-                              child: Text(
-                                nomeController.text.isNotEmpty
-                                    ? nomeController.text[0].toUpperCase()
-                                    : '?',
-                                style: const TextStyle(
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                    child: Container(
+                      //sombra no avatar
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF577096),
+                            spreadRadius: 2,
+                            blurRadius: 10,
+                            offset: const Offset(2, 4),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: avatarColor,
+                        child: Text(
+                          nomeController.text.isNotEmpty
+                              ? nomeController.text[0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
                 ),
                 const SizedBox(height: 20),
                 Padding(
@@ -184,6 +183,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Botão de salvar
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF577096),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                            offset: const Offset(1, 5),
+                          ),
+                        ],
+                      ),
+                      child: ElevatedButton(
+                        onPressed: _updateProfile,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0XFF577096),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 9,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Salvar",
+                          style: TextStyle(
+                            color: Color(0xFFA8BEE0),
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -193,6 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
   Future<void> _initializeProfile() async {
     await _userDatabase.initializeUserProfile(user!.email!, userId);
 
@@ -215,7 +250,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'name': nomeController.text,
       'cpf': cpfController.text.isEmpty ? null : cpfController.text,
       'birthdate':
-          dataNascimentoController.text.isEmpty ? null : dataNascimentoController.text,
+          dataNascimentoController.text.isEmpty
+              ? null
+              : dataNascimentoController.text,
       'avatarColor':
           avatarColor.value.toString(), // Salvar a cor como uma String
     });
