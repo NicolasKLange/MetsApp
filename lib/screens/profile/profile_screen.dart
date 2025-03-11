@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mets_app/assets/componentes/buttons/button_save.dart';
 import 'package:mets_app/database/database.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -28,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //Avatar
   Color avatarColor = Colors.grey.shade300;
 
+  // Inicializando dados do usuário na página
   @override
   void initState() {
     super.initState();
@@ -50,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: BoxDecoration(
               color: Color(0xFFEFE9E0),
               borderRadius: BorderRadius.circular(15),
-              //Sombra do card
               boxShadow: [
                 BoxShadow(
                   color: Color(0xFF135452).withOpacity(0.4),
@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-
+            // Título da página
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -74,16 +74,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 30),
+                // Avatar do usuário com inicial do nome
                 Center(
                   child: GestureDetector(
                     onTap: _pickColor,
                     child: Container(
-                      //sombra no avatar
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Color(0xFF577096),
+                            color: Color(0xFF135452).withOpacity(0.4),
                             spreadRadius: 2,
                             blurRadius: 10,
                             offset: const Offset(2, 4),
@@ -107,7 +108,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
+                // Campo nome do usuário
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextField(
@@ -131,10 +133,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
+                    // Campo CPF
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
-                        //Campo CPF
                         child: TextField(
                           controller: cpfController,
                           decoration: const InputDecoration(
@@ -158,10 +160,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    // Campo data de nascimento
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
-                        //Campo data de nascimento
                         child: TextField(
                           controller: dataNascimentoController,
                           decoration: const InputDecoration(
@@ -183,42 +185,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    // Botão de salvar
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFF577096),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                            offset: const Offset(1, 5),
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        onPressed: _updateProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0XFF577096),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 9,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          "Salvar",
-                          style: TextStyle(
-                            color: Color(0xFFA8BEE0),
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
+                ),
+                const SizedBox(height: 40),
+                // Botão de salvar
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ButtonSave(
+                      text: "Salvar",
+                      onTap: () async {
+                        await _updateProfile();
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -228,6 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Dados do usuário
   Future<void> _initializeProfile() async {
     await _userDatabase.initializeUserProfile(user!.email!, userId);
 
@@ -244,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  //Editar dados de perfil
+  // Editar dados de perfil
   Future<void> _updateProfile() async {
     await FirebaseFirestore.instance.collection('Users').doc(user!.uid).update({
       'name': nomeController.text,
@@ -254,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ? null
               : dataNascimentoController.text,
       'avatarColor':
-          avatarColor.value.toString(), // Salvar a cor como uma String
+          avatarColor.value.toString(), 
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -262,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Método para selecionar uma cor do avatar
+  // Método para selecionar cor do avatar do usuário
   void _pickColor() {
     showDialog(
       context: context,

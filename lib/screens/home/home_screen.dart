@@ -14,43 +14,73 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-//Classe dashboard para boas vindas e metas do usuário
 class _DashboardScreenState extends State<DashboardScreen> {
+
+  // Instanciando o nome do usuário para mostrar na tela
+  final user = FirebaseAuth.instance.currentUser!;
+
+  // Coletando o Id do usuário
+  Stream<DocumentSnapshot> get userStream {
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.uid)
+        .snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFEFE9E0),
-      //Body da home screen
+      // Body da home screen
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //Texto de boas vindas para o usuário
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 70.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Seja bem vindo',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-                Text(
-                  'Nicolas Lange',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-              ],
-            ),
+          StreamBuilder<DocumentSnapshot>(
+            stream: userStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data!.exists) {
+                final userName = snapshot.data!['name'] ?? 'Usuário';
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Texto de boas vindas para o usuário
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30.0, top: 70.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Seja bem-vindo',
+                            style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0XFF0F9E99),
+                            ),
+                          ),
+                          // Nome do usuário salvo no Firebase
+                          Text(
+                            userName,
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0XFF0F9E99),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return const Text(
+                  'Carregando...',
+                  style: TextStyle(fontSize: 16, color: Color(0xFFEDE8E8)),
+                );
+              }
+            },
           ),
           const SizedBox(height: 100),
-          //Metas do usuário
+          // Metas do usuário
           Padding(
             padding: const EdgeInsets.only(left: 30.0, right: 30),
             child: Row(
@@ -66,16 +96,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 Spacer(),
                 GestureDetector(
-                  //Adicionar função para navegar para a tela de metas
+                  // Adicionar função para navegar para a tela de metas
                   onTap: () {},
                   child: Icon(Icons.add, color: Color(0XFF0F9E99)),
                 ),
               ],
             ),
           ),
-          //Lista das metas do usuário
+          // Lista das metas do usuário
           Expanded(
-            //ListView para o usuário poder visualizar todas suas metas
             child: ListView(
               children: [
                 CardMetsStyle(
@@ -96,6 +125,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
 
 //Classe home para deixar appBar e navigationBar padronizados para o app
 class HomeScreen extends StatefulWidget {
