@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class AtividadesFisicasScreen extends StatefulWidget {
   const AtividadesFisicasScreen({super.key});
@@ -151,7 +152,7 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 10,),
+          const SizedBox(height: 10),
           // Caixa de texto para marcar
           Padding(
             padding: const EdgeInsets.only(left: 22.0),
@@ -176,7 +177,7 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
                             });
                           },
                           activeColor: Color(0XFF0F9E99),
-                          checkColor: Colors.white,
+                          checkColor: Color(0XFFEFE9E0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -193,15 +194,43 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
               }),
             ),
           ),
+          const SizedBox(height: 50),
 
-          const SizedBox(height: 30),
+          Text(
+            'Resultado Ótimo',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Color(0XFF0F9E99),
+            ),
+          ),
+          const SizedBox(height: 50),
+          // Circulo de progresso da meta
+          CircularPercentIndicator(
+            radius: 80.0,
+            lineWidth: 10.0,
+            // Implementar função para fazer a porcentagem automaticamente
+            // de acordo com os dias da semana que a pessoa marcar
+            percent: 0.75,
+            center: Text(
+              "75%",
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Color(0XFF0F9E99),
+              ),
+            ),
+            progressColor: Color(0xFF135452),
+            backgroundColor: Color.fromARGB(255, 3, 5, 5),
+            circularStrokeCap: CircularStrokeCap.round,
+          ),
+          const SizedBox(height: 70),
 
           // Botão de voltar para tela anterior
           Container(
             decoration: BoxDecoration(
               color: Color(0XFF0F9E99),
-              borderRadius: BorderRadius.circular(5),
-              //Sombra do card
+              borderRadius: BorderRadius.circular(6),
               boxShadow: [
                 BoxShadow(
                   color: Color(0xFF135452).withOpacity(0.4),
@@ -211,16 +240,17 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
                 ),
               ],
             ),
+            // Navegar para tela anterior
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
               },
               child: Padding(
                 padding: const EdgeInsets.only(
-                  top: 5.0,
-                  bottom: 5.0,
-                  left: 8.0,
-                  right: 8.0,
+                  top: 7.0,
+                  bottom: 7.0,
+                  left: 13.0,
+                  right: 13.0,
                 ),
                 child: Text(
                   'Voltar',
