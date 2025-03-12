@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mets_app/assets/componentes/cardsMetsStyle/cards_mets_style.dart';
+import 'package:mets_app/assets/componentes/card/cardsMetsStyle/cards_mets_style.dart';
 import 'package:mets_app/assets/componentes/navigation_bar/custom_navigation_bar.dart';
 import 'package:mets_app/screens/mets/mets_screen.dart';
 import 'package:mets_app/screens/profile/profile_screen.dart';
@@ -93,12 +93,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     fontWeight: FontWeight.w500,
                     color: Color(0XFF0F9E99),
                   ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  // Adicionar função para navegar para a tela de metas
-                  onTap: () {},
-                  child: Icon(Icons.add, color: Color(0XFF0F9E99)),
                 ),
               ],
             ),

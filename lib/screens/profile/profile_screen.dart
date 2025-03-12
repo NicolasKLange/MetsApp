@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:mets_app/assets/componentes/buttons/button_save.dart';
-import 'package:mets_app/database/database.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:mets_app/assets/componentes/profile_controller/profile_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -22,17 +20,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   //Database
   final User? user = FirebaseAuth.instance.currentUser;
-  final DatabaseMethods _userDatabase = DatabaseMethods();
   final String userId = FirebaseAuth.instance.currentUser!.uid;
 
+  // Profile Controller
+  final ProfileController _profileController = ProfileController();
+  
   //Avatar
   Color avatarColor = Colors.grey.shade300;
 
-  // Inicializando dados do usuário na página
-  @override
+   @override
   void initState() {
     super.initState();
-    _initializeProfile();
+    // Inicializar o perfil via controller
+    _profileController.initializeProfile(
+      userId: userId,
+      nomeController: nomeController,
+      cpfController: cpfController,
+      dataNascimentoController: dataNascimentoController,
+      onColorLoaded: (color) {
+        setState(() {
+          avatarColor = color;
+        });
+      },
+    );
   }
 
   @override
@@ -43,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 50),
+          SizedBox(height: 70),
           //Card com dados do usuário
           Container(
             padding: const EdgeInsets.all(16),
@@ -67,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: Text(
                     'Perfil',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 30,
                       color: Color(0XFF0F9E99),
                       fontWeight: FontWeight.bold,
@@ -78,7 +88,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Avatar do usuário com inicial do nome
                 Center(
                   child: GestureDetector(
-                    onTap: _pickColor,
+                    onTap: () {
+                      _profileController.pickColor(
+                        context: context,
+                        avatarColor: avatarColor,
+                        onColorSelected: (color) {
+                          setState(() {
+                            avatarColor = color;
+                          });
+                        },
+                        onSave: () {
+                          _profileController.updateProfile(
+                            userId: userId,
+                            context: context,
+                            nomeController: nomeController,
+                            cpfController: cpfController,
+                            dataNascimentoController: dataNascimentoController,
+                            avatarColor: avatarColor,
+                          );
+                        },
+                      );
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -195,7 +225,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: ButtonSave(
                       text: "Salvar",
                       onTap: () async {
-                        await _updateProfile();
+                        await _profileController.updateProfile(
+                          userId: userId,
+                          context: context,
+                          nomeController: nomeController,
+                          cpfController: cpfController,
+                          dataNascimentoController: dataNascimentoController,
+                          avatarColor: avatarColor,
+                        );
                       },
                     ),
                   ),
@@ -205,76 +242,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  // Dados do usuário
-  Future<void> _initializeProfile() async {
-    await _userDatabase.initializeUserProfile(user!.email!, userId);
-
-    final userProfile = await _userDatabase.getUserProfile(userId);
-    setState(() {
-      nomeController.text = userProfile['name'] ?? '';
-      cpfController.text = userProfile['cpf'] ?? '';
-      dataNascimentoController.text = userProfile['birthdate'] ?? '';
-
-      // Carregar a cor escolhida para o Firebase
-      if (userProfile['avatarColor'] != null) {
-        avatarColor = Color(int.parse(userProfile['avatarColor']));
-      }
-    });
-  }
-
-  // Editar dados de perfil
-  Future<void> _updateProfile() async {
-    await FirebaseFirestore.instance.collection('Users').doc(user!.uid).update({
-      'name': nomeController.text,
-      'cpf': cpfController.text.isEmpty ? null : cpfController.text,
-      'birthdate':
-          dataNascimentoController.text.isEmpty
-              ? null
-              : dataNascimentoController.text,
-      'avatarColor':
-          avatarColor.value.toString(), 
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Perfil atualizado com sucesso!')),
-    );
-  }
-
-  // Método para selecionar cor do avatar do usuário
-  void _pickColor() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Escolha uma cor"),
-          content: SingleChildScrollView(
-            child: ColorPicker(
-              pickerColor: avatarColor,
-              onColorChanged: (Color color) {
-                setState(() {
-                  avatarColor = color;
-                });
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () {
-                _updateProfile();
-                Navigator.pop(context);
-              },
-              child: const Text("Salvar"),
-            ),
-          ],
-        );
-      },
     );
   }
 }
