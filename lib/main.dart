@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mets_app/login/pages/auth_page.dart';
+import 'package:mets_app/screens/atividadesFisicas/atividades_fisicas.dart';
 import 'package:mets_app/screens/home/home_screen.dart';
 import 'package:mets_app/screens/mets/mets_screen.dart';
 import 'package:mets_app/screens/profile/profile_screen.dart';
@@ -31,6 +31,7 @@ class MetsApp extends StatelessWidget {
         '/homeScreen': (context) => const HomeScreen(),
         '/profileScreen': (context) => const ProfileScreen(),
         '/metsScreen': (context) => const MetsScreen(),
+        '/atividadesFisicasScreen': (context) => const AtividadesFisicasScreen(),
       },
     );
   }

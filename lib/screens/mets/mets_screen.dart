@@ -75,7 +75,7 @@ class _MetsScreenState extends State<MetsScreen> {
                         DashboardCardMets(
                           title: 'Atividades Físicas',
                           icon: Icons.abc,
-                          route: '/atividadesFisicas',
+                          route: '/atividadesFisicasScreen',
                         ),
                         DashboardCardMets(
                           title: 'Meditar',
@@ -84,7 +84,7 @@ class _MetsScreenState extends State<MetsScreen> {
                         ),
                         DashboardCardMets(
                           title: 'Leitura',
-                          icon: Icons.media_bluetooth_off,
+                          icon: Icons.book,
                           route: '/leitura',
                         ),
                       
