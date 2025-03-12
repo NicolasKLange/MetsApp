@@ -1,16 +1,3 @@
-# mets_app
+# Mets
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+O Aplicativo de Metas Pessoais foi criado para ajudar os usuários a definirem, acompanharem e alcançarem seus objetivos de forma prática e organizada. Com ele, o usuário pode criar suas metas, estabelecer prazos e monitorar seu progresso tanto ao longo da semana quanto no período total da meta. A interface é simples e intuitiva, permitindo visualizar de maneira clara o andamento das metas e ajustá-las conforme necessário. O aplicativo é uma ferramenta poderosa para manter o foco e aumentar a produtividade, garantindo que você se mantenha no caminho certo para alcançar suas conquistas pessoais.
