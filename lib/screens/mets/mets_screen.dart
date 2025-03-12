@@ -74,7 +74,7 @@ class _MetsScreenState extends State<MetsScreen> {
                       children: [
                         DashboardCardMets(
                           title: 'Atividades Físicas',
-                          icon: Icons.abc,
+                          icon: Icons.directions_run_rounded,
                           route: '/atividadesFisicasScreen',
                         ),
                         DashboardCardMets(

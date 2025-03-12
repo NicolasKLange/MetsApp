@@ -12,6 +12,9 @@ class AtividadesFisicasScreen extends StatefulWidget {
 }
 
 class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
+  // Lista de bool para cada dia da semana
+  List<bool> daysChecked = List.generate(7, (_) => false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,15 +55,184 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
         //Retira o botão de voltar
         automaticallyImplyLeading: false,
       ),
+
       body: Column(
         children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+          const SizedBox(height: 70),
+          // Título da meta
+          Center(
+            child: Text(
+              'Atividades Físicas',
+              style: TextStyle(
+                color: Color(0XFF0F9E99),
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          Text('Atividades Físicas')
+
+          const SizedBox(height: 20),
+
+          // Icon da meta
+          Icon(
+            Icons.directions_run_rounded,
+            color: Color(0XFF0F9E99),
+            size: 50,
+          ),
+          const SizedBox(height: 30),
+
+          // Dias da semana
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 30),
+            child: Row(
+              children: [
+                Text(
+                  'Dom',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Text(
+                  'Seg',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Text(
+                  'Ter',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Text(
+                  'Qua',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 15),
+                Text(
+                  'Qui',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Text(
+                  'Sex',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Text(
+                  'Sáb',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Color(0XFF0F9E99),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10,),
+          // Caixa de texto para marcar
+          Padding(
+            padding: const EdgeInsets.only(left: 22.0),
+            child: Row(
+              //Lista com sete checkBox
+              children: List.generate(7, (index) {
+                return Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    //Aumentar o tamanho do checkBox
+                    Transform.scale(
+                      scale: 1.5,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Checkbox(
+                          value: daysChecked[index],
+                          onChanged: (bool? value) {
+                            setState(() {
+                              daysChecked[index] = value!;
+                            });
+                          },
+                          activeColor: Color(0XFF0F9E99),
+                          checkColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          side: BorderSide(
+                            // Borda quando desmarcado
+                            color: Color(0XFF0F9E99),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ),
+          ),
+
+          const SizedBox(height: 30),
+
+          // Botão de voltar para tela anterior
+          Container(
+            decoration: BoxDecoration(
+              color: Color(0XFF0F9E99),
+              borderRadius: BorderRadius.circular(5),
+              //Sombra do card
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFF135452).withOpacity(0.4),
+                  spreadRadius: 2,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 5.0,
+                  bottom: 5.0,
+                  left: 8.0,
+                  right: 8.0,
+                ),
+                child: Text(
+                  'Voltar',
+                  style: TextStyle(
+                    color: Color(0XFFEFE9E0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
