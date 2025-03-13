@@ -24,11 +24,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Profile Controller
   final ProfileController _profileController = ProfileController();
-  
+
   //Avatar
   Color avatarColor = Colors.grey.shade300;
 
-   @override
+  @override
   void initState() {
     super.initState();
     // Inicializar o perfil via controller
@@ -50,7 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Color(0XFFEFE9E0),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(height: 70),
@@ -139,27 +138,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
+
                 // Campo nome do usuário
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextField(
-                    controller: nomeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nome',
-                      labelStyle: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xFF135452),
-                        fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nome',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0XFF135452),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      hintText: 'Digite seu nome',
-                      hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (value) {
-                      setState(() {});
-                    },
+                      TextField(
+                        controller: nomeController,
+                        decoration: InputDecoration(
+                          hintText: 'Nome',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                      ),
+                    ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Row(
                   children: [
@@ -167,52 +178,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
-                        child: TextField(
-                          controller: cpfController,
-                          decoration: const InputDecoration(
-                            labelText: 'CPF',
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xFF135452),
-                              fontWeight: FontWeight.bold,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'CPF',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: Color(0XFF135452),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            hintText: 'xxx.xxx.xxx-xx',
-                            hintStyle: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
+                            TextField(
+                              controller: cpfController,
+                              decoration: InputDecoration(
+                                hintText: 'xxx.xxx.xxx-xx',
+                                border: InputBorder.none,
+                              ),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                MaskedInputFormatter('000.000.000-00'),
+                              ],
                             ),
-                            border: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            MaskedInputFormatter('000.000.000-00'),
                           ],
                         ),
                       ),
                     ),
+                    const SizedBox(width: 10),
+
                     // Campo data de nascimento
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: TextField(
-                          controller: dataNascimentoController,
-                          decoration: const InputDecoration(
-                            labelText: 'Data nascimento',
-                            labelStyle: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xFF135452),
-                              fontWeight: FontWeight.bold,
-                            ),
-                            hintText: 'DD/MM/AAAA',
-                            hintStyle: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                            border: InputBorder.none,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Data de nascimento',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Color(0XFF135452),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [MaskedInputFormatter('00/00/0000')],
-                        ),
+                            TextField(
+                              controller: dataNascimentoController,
+                              decoration: InputDecoration(
+                                hintText: 'DD/MM/AAAA',
+                                border: InputBorder.none,
+                              ),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                MaskedInputFormatter('00/00/0000'),
+                              ],
+                            ),
+                        ],
                       ),
                     ),
                   ],

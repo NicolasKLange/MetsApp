@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -220,8 +219,8 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
                 color: Color(0XFF0F9E99),
               ),
             ),
-            progressColor: Color(0xFF135452),
-            backgroundColor: Color.fromARGB(255, 3, 5, 5),
+            progressColor: Color(0XFF0F9E99),
+            backgroundColor: Color(0xFF135452),
             circularStrokeCap: CircularStrokeCap.round,
           ),
           const SizedBox(height: 70),
