@@ -17,7 +17,7 @@ class ButtonLogin extends StatelessWidget {
           //Sombra no botão de login
           boxShadow: [
             BoxShadow(
-              color:  Color(0XFF135452).withOpacity(0.5),
+              color:  Colors.black45.withOpacity(0.4),
               blurRadius: 10.0, 
               offset: const Offset(2, 7), 
             ),

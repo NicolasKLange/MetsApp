@@ -23,7 +23,7 @@ class DashboardCardMets extends StatelessWidget {
         border: Border.all(color: const Color(0xFF0F9E99), width: 2),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF135452).withOpacity(0.4),
+            color: Colors.black45.withOpacity(0.4),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3),

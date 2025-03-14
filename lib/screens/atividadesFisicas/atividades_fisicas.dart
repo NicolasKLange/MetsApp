@@ -232,7 +232,7 @@ class _AtividadesFisicasScreenState extends State<AtividadesFisicasScreen> {
               borderRadius: BorderRadius.circular(6),
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFF135452).withOpacity(0.4),
+                  color: Colors.black45.withOpacity(0.4),
                   spreadRadius: 2,
                   blurRadius: 8,
                   offset: Offset(0, 4),
