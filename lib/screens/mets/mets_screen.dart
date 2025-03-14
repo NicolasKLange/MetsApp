@@ -71,6 +71,7 @@ class _MetsScreenState extends State<MetsScreen> {
                       padding: const EdgeInsets.all(20),
                       childAspectRatio: 1,
                       children: [
+                        // Adicionar as metas criadas pelo usuario, sendo possivel modificar o icon da meta quando ir para a tela da meta 
                         DashboardCardMets(
                           title: 'Atividades Físicas',
                           icon: Icons.directions_run_rounded,
