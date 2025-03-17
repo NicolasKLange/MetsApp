@@ -37,7 +37,7 @@ class DatabaseMethods {
   Future<DocumentSnapshot> getUserProfile(String userId) async {
     return await _firestore.collection('Users').doc(userId).get();
   }
-
+  
   // Criar meta pessoal
 /*
   Variaveis: nome_meta = nome informado pelo usuario

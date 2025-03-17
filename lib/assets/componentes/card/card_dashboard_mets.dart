@@ -20,7 +20,6 @@ class DashboardCardMets extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFEFE9E0),
         borderRadius: BorderRadius.circular(15.0),
-        border: Border.all(color: const Color(0xFF0F9E99), width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black45.withOpacity(0.4),
