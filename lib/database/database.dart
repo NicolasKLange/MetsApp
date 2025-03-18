@@ -45,4 +45,16 @@ class DatabaseMethods {
              data_fim = data informada pelo usuario
              dias_meta = dias da semana que o usuario escolheu para realizar a meta
 */
+// Salvar meta no Firebase
+  Future<void> saveMeta(String nomeMeta, String dataFim, List<String> diasMeta) async {
+    final userDoc = _firestore.collection('Users').doc(userId);
+    final metasCollection = userDoc.collection('Metas');
+    
+    await metasCollection.add({
+      'nome_meta': nomeMeta,
+      'data_inicio': DateTime.now().toIso8601String(), // Data atual
+      'data_fim': dataFim,
+      'dias_meta': diasMeta,
+    });
+  }
 }

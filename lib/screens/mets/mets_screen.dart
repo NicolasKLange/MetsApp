@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:mets_app/assets/componentes/card/card_dashboard_mets.dart';
-import 'package:mets_app/assets/componentes/days_style/days_style.dart';
+import 'package:mets_app/database/database.dart';
 
 class MetsScreen extends StatefulWidget {
   const MetsScreen({super.key});
@@ -71,7 +72,7 @@ class _MetsScreenState extends State<MetsScreen> {
                       padding: const EdgeInsets.all(20),
                       childAspectRatio: 1,
                       children: [
-                        // Adicionar as metas criadas pelo usuario, sendo possivel modificar o icon da meta quando ir para a tela da meta 
+                        // Adicionar as metas criadas pelo usuario, sendo possivel modificar o icon da meta quando ir para a tela da meta
                         DashboardCardMets(
                           title: 'Atividades Físicas',
                           icon: Icons.directions_run_rounded,
@@ -99,172 +100,159 @@ class _MetsScreenState extends State<MetsScreen> {
     );
   }
 
+  // Atualização na função createMets para salvar a meta
   Future<String?> createMets(BuildContext context) async {
-    // Controllers
     TextEditingController nameMetsController = TextEditingController();
     TextEditingController dateMetsController = TextEditingController();
+    List<String> selectedDays = [];
 
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color(0XFFEFE9E0),
-          title: Row(
-            children: [
-              Text(
-                'Criar meta',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0XFF0F9E99),
-                ),
-              ),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.cancel_outlined, color: Color(0XFF0F9E99)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          // Campo de texto para nome da meta
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0XFFEFE9E0),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black45.withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 8,
-                      offset: Offset(1, 4),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            void toggleDay(String day) {
+              setState(() {
+                if (selectedDays.contains(day)) {
+                  selectedDays.remove(day);
+                } else {
+                  selectedDays.add(day);
+                }
+              });
+            }
+
+            return AlertDialog(
+              backgroundColor: Color(0XFFEFE9E0),
+              title: Row(
+                children: [
+                  Text(
+                    'Criar meta',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0XFF0F9E99),
                     ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8.0,
-                    top: 2.0,
-                    bottom: 2.0,
                   ),
-                  child: TextField(
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.cancel_outlined, color: Color(0XFF0F9E99)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
                     controller: nameMetsController,
                     decoration: InputDecoration(
                       hintText: 'Nome da meta',
                       border: InputBorder.none,
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              // Campo de texto para data final da meta
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0XFFEFE9E0),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black45.withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 8,
-                      offset: Offset(1, 4),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8.0,
-                    top: 2.0,
-                    bottom: 2.0,
-                  ),
-                  child: TextField(
+                  SizedBox(height: 10),
+                  TextField(
                     controller: dateMetsController,
                     decoration: InputDecoration(
                       hintText: 'Data final da meta',
                       border: InputBorder.none,
                     ),
+                    inputFormatters: [MaskedInputFormatter('00/00/0000')],
                   ),
-                ),
+                  SizedBox(height: 10),
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children:
+                            ['Dom', 'Seg', 'Ter', 'Qua'].map((day) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                child: GestureDetector(
+                                  onTap: () => toggleDay(day),
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          selectedDays.contains(day)
+                                              ? Color(0XFF0F9E99)
+                                              : Colors.grey,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      day,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children:
+                            ['Qui', 'Sex', 'Sab'].map((day) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                child: GestureDetector(
+                                  onTap: () => toggleDay(day),
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          selectedDays.contains(day)
+                                              ? Color(0XFF0F9E99)
+                                              : Colors.grey,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      day,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 17.0,
-                      bottom: 13.0,
-                      left: 3.0,
+              actions: [
+                GestureDetector(
+                  onTap: () async {
+                    if (nameMetsController.text.isNotEmpty &&
+                        dateMetsController.text.isNotEmpty) {
+                      await DatabaseMethods().saveMeta(
+                        nameMetsController.text,
+                        dateMetsController.text,
+                        selectedDays,
+                      );
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0XFF0F9E99),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: Text(
-                      'Selecione os dias',
+                      'Criar',
                       style: TextStyle(
-                        color: Color(0XFF0F9E99),
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color(0XFFEFE9E0),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                ],
-              ),
-              // Dias da semana para realizar a meta
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  dayContainer('Dom'),
-                  SizedBox(width: 6),
-                  dayContainer('Seg'),
-                  SizedBox(width: 6),
-                  dayContainer('Ter'),
-                  SizedBox(width: 6),
-                  dayContainer('Qua'),
-                  SizedBox(width: 6),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  dayContainer('Qui'),
-                  SizedBox(width: 6),
-                  dayContainer('Sex'),
-                  SizedBox(width: 6),
-                  dayContainer('Sab'),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0XFF0F9E99),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              //Adicionar função para criar meta no database
-              child: GestureDetector(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    right: 15.0,
-                    left: 15.0,
-                    top: 5.0,
-                    bottom: 5.0,
-                  ),
-                  child: Text(
-                    'Criar',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color(0XFFEFE9E0),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         );
       },
     );
