@@ -10,7 +10,7 @@ class DashboardCardMets extends StatelessWidget {
     super.key,
     required this.title,
     required this.icon,
-    required this.route,
+    required this.route, required Map<String, dynamic> meta,
   });
 
   @override

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:mets_app/assets/componentes/card/card_dashboard_mets.dart';
@@ -7,103 +9,151 @@ class MetsScreen extends StatefulWidget {
   const MetsScreen({super.key});
 
   @override
-  State<MetsScreen> createState() => _MetsScreenState();
+  _MetsScreen createState() => _MetsScreen();
 }
 
-class _MetsScreenState extends State<MetsScreen> {
+class _MetsScreen extends State<MetsScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final User? user = FirebaseAuth.instance.currentUser;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<List<Map<String, dynamic>>> getMetas() async {
+    try {
+      final userDoc = _firestore.collection('Users').doc(userId);
+      final metasCollection = userDoc.collection('Metas');
+      final querySnapshot = await metasCollection.get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print('Nenhuma meta encontrada!');
+      } else {
+        print('Metas encontradas: ${querySnapshot.docs.length}');
+      }
+
+      return querySnapshot.docs.map((doc) {
+        return {
+          'id': doc.id,
+          'nome_meta': doc['nome_meta'],
+          'data_inicio': doc['data_inicio'],
+          'data_fim': doc['data_fim'],
+          'dias_meta': List<String>.from(doc['dias_meta']),
+        };
+      }).toList();
+    } catch (e) {
+      print('Erro ao carregar metas: $e');
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFFEFE9E0),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 70),
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, right: 55),
-            child: Row(
+      backgroundColor: const Color(0xFFEFE9E0),
+      body: FutureBuilder<List<Map<String, dynamic>>>( 
+        future: getMetas(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            print('Erro ao carregar as metas: ${snapshot.error}');
+            return Center(child: Text('Erro ao carregar metas'));
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Nenhuma meta encontrada'));
+          }
+
+          final metas = snapshot.data!;
+
+          return Padding(
+            padding: const EdgeInsets.only(top: 70.0, right: 30.0, left: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Suas metas',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0XFF0F9E99),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'Minhas Metas',
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0F9E99),
+                    ),
                   ),
                 ),
-                Spacer(),
-                // Icon para adicionar meta pessoal
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0XFF0F9E99),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black45.withOpacity(0.4),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    onPressed: () async {
-                      await createMets(context);
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, 
+                      crossAxisSpacing: 30, 
+                      mainAxisSpacing: 30, 
+                      childAspectRatio: 1, 
+                    ),
+                    itemCount: metas.length,
+                    itemBuilder: (context, index) {
+                      final meta = metas[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFE9E0), 
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black45.withOpacity(0.4),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(15.0),
+                          onTap: () {
+                            // Navegar para a tela de detalhes da meta
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MetaDetalhesScreen(meta: meta),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Adicionar icon onde o usuario podera alterar
+                                const SizedBox(height: 10),
+                                Text(
+                                  meta['nome_meta'],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Color(0xFF0F9E99),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  'Término: ${meta['data_fim']}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
                     },
-                    icon: Icon(Icons.add, color: Color(0XFFEFE9E0)),
                   ),
                 ),
               ],
             ),
-          ),
-
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30.0, right: 50, top: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 30,
-                      mainAxisSpacing: 30,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(20),
-                      childAspectRatio: 1,
-                      children: [
-                        // Adicionar as metas criadas pelo usuario, sendo possivel modificar o icon da meta quando ir para a tela da meta
-                        DashboardCardMets(
-                          title: 'Atividades Físicas',
-                          icon: Icons.directions_run_rounded,
-                          route: '/atividadesFisicasScreen',
-                        ),
-                        DashboardCardMets(
-                          title: 'Meditar',
-                          icon: Icons.media_bluetooth_off,
-                          route: '/meditar',
-                        ),
-                        DashboardCardMets(
-                          title: 'Leitura',
-                          icon: Icons.book,
-                          route: '/leitura',
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Center(
-            child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/metasScreenTeste'),
-             child: 
-              Text('Metas', style: TextStyle(fontSize: 40),)
-            )
-          ),
-          const SizedBox(height: 30),
-        ],
+          );
+        },
       ),
     );
   }
@@ -263,6 +313,49 @@ class _MetsScreenState extends State<MetsScreen> {
           },
         );
       },
+    );
+  }
+}
+
+// Tela com os detalhes da meta
+class MetaDetalhesScreen extends StatelessWidget {
+  final Map<String, dynamic> meta;
+
+  MetaDetalhesScreen({required this.meta});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Detalhes da Meta'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              meta['nome_meta'],
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Data Início: ${meta['data_inicio']}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Data Término: ${meta['data_fim']}',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Dias da Meta: ${meta['dias_meta'].join(', ')}',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
