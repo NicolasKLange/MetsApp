@@ -48,7 +48,7 @@ class _MetsScreenState extends State<MetsScreen> {
                   ),
                   child: IconButton(
                     onPressed: () async {
-                      String? nome = await createMets(context);
+                      await createMets(context);
                     },
                     icon: Icon(Icons.add, color: Color(0XFFEFE9E0)),
                   ),
@@ -95,6 +95,14 @@ class _MetsScreenState extends State<MetsScreen> {
               ),
             ),
           ),
+          Center(
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(context, '/metasScreenTeste'),
+             child: 
+              Text('Metas', style: TextStyle(fontSize: 40),)
+            )
+          ),
+          const SizedBox(height: 30),
         ],
       ),
     );

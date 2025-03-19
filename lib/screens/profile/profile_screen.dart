@@ -13,7 +13,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   //Controllers
-  final TextEditingController cpfController = TextEditingController();
   final TextEditingController dataNascimentoController =
       TextEditingController();
   final TextEditingController nomeController = TextEditingController();
@@ -35,7 +34,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _profileController.initializeProfile(
       userId: userId,
       nomeController: nomeController,
-      cpfController: cpfController,
       dataNascimentoController: dataNascimentoController,
       onColorLoaded: (color) {
         setState(() {
@@ -101,7 +99,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             userId: userId,
                             context: context,
                             nomeController: nomeController,
-                            cpfController: cpfController,
                             dataNascimentoController: dataNascimentoController,
                             avatarColor: avatarColor,
                           );
@@ -174,42 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    // Campo CPF
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'CPF',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color(0XFF135452),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            TextField(
-                              controller: cpfController,
-                              decoration: InputDecoration(
-                                hintText: 'xxx.xxx.xxx-xx',
-                                border: InputBorder.none,
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                MaskedInputFormatter('000.000.000-00'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     const SizedBox(width: 10),
-
                     // Campo data de nascimento
                     Expanded(
                       child: Column(
@@ -255,7 +217,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           userId: userId,
                           context: context,
                           nomeController: nomeController,
-                          cpfController: cpfController,
                           dataNascimentoController: dataNascimentoController,
                           avatarColor: avatarColor,
                         );

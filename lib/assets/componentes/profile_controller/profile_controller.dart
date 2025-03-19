@@ -13,7 +13,6 @@ class ProfileController {
   Future<void> initializeProfile({
     required String userId,
     required TextEditingController nomeController,
-    required TextEditingController cpfController,
     required TextEditingController dataNascimentoController,
     required Function(Color) onColorLoaded,
   }) async {
@@ -22,7 +21,6 @@ class ProfileController {
 
     final userProfile = await _userDatabase.getUserProfile(userId);
     nomeController.text = userProfile['name'] ?? '';
-    cpfController.text = userProfile['cpf'] ?? '';
     dataNascimentoController.text = userProfile['birthdate'] ?? '';
 
     if (userProfile['avatarColor'] != null) {
@@ -35,13 +33,11 @@ class ProfileController {
     required String userId,
     required BuildContext context,
     required TextEditingController nomeController,
-    required TextEditingController cpfController,
     required TextEditingController dataNascimentoController,
     required Color avatarColor,
   }) async {
     await FirebaseFirestore.instance.collection('Users').doc(userId).update({
       'name': nomeController.text,
-      'cpf': cpfController.text.isEmpty ? null : cpfController.text,
       'birthdate':
           dataNascimentoController.text.isEmpty ? null : dataNascimentoController.text,
       'avatarColor': avatarColor.value.toString(),
