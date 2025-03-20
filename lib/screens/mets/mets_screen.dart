@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mets_app/assets/componentes/card/card_dashboard_mets.dart';
 import 'package:mets_app/database/database.dart';
 import 'package:mets_app/screens/mets/detalhes.dart';
 
@@ -112,7 +110,7 @@ class _MetsScreen extends State<MetsScreen> {
                   'nome_meta': doc['nome_meta'],
                   'data_inicio': doc['data_inicio'],
                   'data_fim': doc['data_fim'],
-                  'dias_meta': List<String>.from(doc['dias_meta']),
+                  'dias_meta': Map<String, bool>.from(doc['dias_meta']), 
                 };
               }).toList();
 
@@ -158,7 +156,10 @@ class _MetsScreen extends State<MetsScreen> {
                     ),
                     itemCount: metas.length,
                     itemBuilder: (context, index) {
+                      
                       final meta = metas[index];
+                     
+
                       return Container(
                         decoration: BoxDecoration(
                           color: const Color(0xFFEFE9E0),
@@ -179,7 +180,7 @@ class _MetsScreen extends State<MetsScreen> {
                               context,
                               MaterialPageRoute(
                                 builder:
-                                    (context) => MetaDetalhesScreen(meta: meta),
+                                    (context) => MetaDetalhesScreen(meta: meta, userId: userId,),
                               ),
                             );
                           },

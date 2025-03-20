@@ -1,18 +1,74 @@
 // Tela com os detalhes da meta
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mets_app/database/database.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class MetaDetalhesScreen extends StatelessWidget {
+class MetaDetalhesScreen extends StatefulWidget {
   final Map<String, dynamic> meta;
+  final String userId;
 
-  MetaDetalhesScreen({required this.meta});
+  MetaDetalhesScreen({required this.meta, required this.userId});
+
+  @override
+  _MetaDetalhesScreenState createState() => _MetaDetalhesScreenState();
+}
+
+class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
+  late Map<String, bool> diasSelecionados;
+  final List<String> diasDaSemana = [
+    "Dom",
+    "Seg",
+    "Ter",
+    "Qua",
+    "Qui",
+    "Sex",
+    "Sáb",
+  ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    diasSelecionados = Map<String, bool>.from(widget.meta['dias_meta']);
+    diasSelecionados.updateAll(
+      (key, value) => false,
+    ); // Definir todos os dias selecionados como desmarcados
+  }
+
+  Future<void> atualizarDiaMeta(
+    String metaId,
+    String dia,
+    bool novoValor,
+  ) async {
+    final userDoc = _firestore.collection('Users').doc(widget.userId);
+    final metaDoc = userDoc.collection('Metas').doc(metaId);
+
+    try {
+      await metaDoc.update({'dias_meta.$dia': novoValor});
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Erro ao atualizar meta: $e")));
+    }
+  }
+
+  void toggleDia(String dia) {
+    if (!widget.meta['dias_meta'].containsKey(dia)) return;
+
+    setState(() {
+      diasSelecionados[dia] = !diasSelecionados[dia]!;
+    });
+
+    atualizarDiaMeta(widget.meta['id'], dia, diasSelecionados[dia]!);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFEFE9E0),
-      //App bar do aplicativo
       appBar: AppBar(
         backgroundColor: Color(0XFF0F9E99),
         title: Padding(
@@ -36,7 +92,6 @@ class MetaDetalhesScreen extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
-              //Espaço entre o texto e icon
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.logout, color: Color(0XFFEFE9E0)),
@@ -45,32 +100,156 @@ class MetaDetalhesScreen extends StatelessWidget {
             ],
           ),
         ),
-        //Retira o botão de voltar
         automaticallyImplyLeading: false,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 30.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              meta['nome_meta'],
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              widget.meta['nome_meta'],
+              style: TextStyle(
+                color: Color(0XFF0F9E99),
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(height: 10),
-            Text(
-              'Data Início: ${meta['data_inicio']}',
-              style: TextStyle(fontSize: 18),
+            const SizedBox(height: 20),
+            Icon(
+              Icons.directions_run_rounded,
+              color: Color(0XFF0F9E99),
+              size: 50,
             ),
-            SizedBox(height: 10),
-            Text(
-              'Data Término: ${meta['data_fim']}',
-              style: TextStyle(fontSize: 18),
+            const SizedBox(height: 30),
+            // Dias da semana para realizar a meta
+            Center(
+              child: Wrap(
+                spacing: 10,
+                children:
+                    diasDaSemana.map((dia) {
+                      bool isSelected =
+                          widget.meta['dias_meta'].containsKey(dia) &&
+                          widget.meta['dias_meta'][dia] == true;
+                      bool isChecked = diasSelecionados[dia] ?? false;
+
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            dia,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  isSelected ? Color(0XFF0F9E99) : Colors.grey,
+                            ),
+                          ),
+                          Transform.scale(
+                            scale: 1.5, // Aumenta o tamanho do Checkbox
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Checkbox(
+                                value: isChecked,
+                                onChanged:
+                                    isSelected
+                                        ? (value) => toggleDia(dia)
+                                        : null,
+                                activeColor: Color(0XFF0F9E99),
+                                checkColor: Color(0XFFEFE9E0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                side: BorderSide(
+                                  color:
+                                      isSelected
+                                          ? Color(0XFF0F9E99)
+                                          : Colors
+                                              .grey, // Borda quando desmarcado
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+              ),
             ),
-            SizedBox(height: 10),
+
+            const SizedBox(height: 50),
+
             Text(
-              'Dias da Meta: ${meta['dias_meta'].join(', ')}',
-              style: TextStyle(fontSize: 18),
+              'Resultado Ótimo',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color(0XFF0F9E99),
+              ),
+            ),
+            const SizedBox(height: 50),
+
+            CircularPercentIndicator(
+              radius: 80.0,
+              lineWidth: 10.0,
+              percent: 0.75,
+              center: Text(
+                "75%",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0XFF0F9E99),
+                ),
+              ),
+              progressColor: Color(0XFF0F9E99),
+              backgroundColor: Color(0xFF135452),
+              circularStrokeCap: CircularStrokeCap.round,
+            ),
+            const SizedBox(height: 70),
+
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0XFF0F9E99),
+                  borderRadius: BorderRadius.circular(6),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black45.withOpacity(0.4),
+                      spreadRadius: 2,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 7.0,
+                  horizontal: 13.0,
+                ),
+                child: Text(
+                  'Voltar',
+                  style: TextStyle(
+                    color: Color(0XFFEFE9E0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            //Deletar meta
+            IconButton(
+              onPressed: () async {
+                await DatabaseMethods().deleteMeta(
+                  widget.userId,
+                  widget.meta['id'],
+                );
+                Navigator.pop(context); // Volta para a tela anterior
+              },
+              icon: Icon(Icons.delete),
             ),
           ],
         ),

@@ -13,11 +13,7 @@ class DatabaseMethods {
     final docSnapshot = await userDoc.get();
 
     if (!docSnapshot.exists) {
-      await userDoc.set({
-        'name': email,
-        'birthdate': null,
-        'id': userId,
-      });
+      await userDoc.set({'name': email, 'birthdate': null, 'id': userId});
     }
   }
 
@@ -37,40 +33,63 @@ class DatabaseMethods {
   }
 
   // ========== Metas ==========
+  Future<void> deleteMeta(String userId, String metaId) async {
+    try {
+      final userDoc = _firestore.collection('Users').doc(userId);
+      final metaDoc = userDoc.collection('Metas').doc(metaId);
 
-  // Salvar meta no Firebase
+      // Deleta a meta
+      await metaDoc.delete();
+    } catch (e) {
+      print("Erro ao deletar meta: $e");
+    }
+  }
+
   Future<void> saveMeta(
     String nomeMeta,
     String dataFim,
-    List<String> diasMeta,
+    List<String> diasSelecionados, // Lista de dias selecionados
   ) async {
     final userDoc = _firestore.collection('Users').doc(userId);
     final metasCollection = userDoc.collection('Metas');
 
+    // Mapa com todos os dias da semana, inicialmente falsos
+    Map<String, bool> diasMeta = {
+      'Dom': false,
+      'Seg': false,
+      'Ter': false,
+      'Qua': false,
+      'Qui': false,
+      'Sex': false,
+      'Sab': false,
+    };
+
+    // Define como `true` apenas os dias selecionados pelo usuário
+    for (String dia in diasSelecionados) {
+      diasMeta[dia] = true;
+    }
+
     await metasCollection.add({
       'nome_meta': nomeMeta,
-      'data_inicio':
-          DateTime.now()
-              .toIso8601String(), // Data atual que o usuário criou a meta
+      'data_inicio': DateTime.now().toIso8601String(),
       'data_fim': dataFim,
-      'dias_meta': diasMeta,
+      'dias_meta': diasMeta, // Agora salvamos um MAPA, não uma LISTA
     });
   }
 
   // Coletando todas as metas do usuário
   Future<List<Map<String, dynamic>>> getMetas() async {
-  final userDoc = _firestore.collection('Users').doc(userId);
-  final metasCollection = userDoc.collection('Metas');
-  final querySnapshot = await metasCollection.get();
-
-  return querySnapshot.docs.map((doc) {
-    return {
-      'id': doc.id,
-      'nome_meta': doc['nome_meta'],
-      'data_inicio': doc['data_inicio'],
-      'data_fim': doc['data_fim'],
-      'dias_meta': List<String>.from(doc['dias_meta']),
-    };
-  }).toList();
-}
+    final userDoc = _firestore.collection('Users').doc(userId);
+    final metasCollection = userDoc.collection('Metas');
+    final querySnapshot = await metasCollection.get();
+    return querySnapshot.docs.map((doc) {
+      return {
+        'id': doc.id,
+        'nome_meta': doc['nome_meta'],
+        'data_inicio': doc['data_inicio'],
+        'data_fim': doc['data_fim'],
+        'dias_meta': Map<String, bool>.from(doc['dias_meta']),
+      };
+    }).toList();
+  }
 }
