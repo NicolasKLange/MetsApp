@@ -194,9 +194,12 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
             CircularPercentIndicator(
               radius: 80.0,
               lineWidth: 10.0,
-              percent: 0.75,
+              percent: calcularProgresso().clamp(
+                0.0,
+                1.0,
+              ), // Garante que fique entre 0 e 1
               center: Text(
-                "75%",
+                "${(calcularProgresso() * 100).toInt()}%",
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
@@ -207,6 +210,7 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
               backgroundColor: Color(0xFF135452),
               circularStrokeCap: CircularStrokeCap.round,
             ),
+
             const SizedBox(height: 70),
 
             GestureDetector(
@@ -255,6 +259,16 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
         ),
       ),
     );
+  }
+
+  double calcularProgresso() {
+    int totalDiasPlanejados =
+        widget.meta['dias_meta'].values.where((v) => v == true).length;
+    int diasConcluidos = diasSelecionados.values.where((v) => v == true).length;
+
+    if (totalDiasPlanejados == 0) return 0.0; // Evitar divisão por zero
+
+    return diasConcluidos / totalDiasPlanejados;
   }
 
   //Modal para o usuário fazer logout do aplicativo
