@@ -136,9 +136,12 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
             ),
             const SizedBox(height: 30),
             GestureDetector(
-              onTap: _showIconPicker, // Função para selecionar novo ícone
+              onTap: _showIconPicker,
               child: Icon(
-                widget.meta['icon'] ?? Icons.help_outline,
+                IconData(
+                  widget.meta['icon'] ?? Icons.help_outline.codePoint,
+                  fontFamily: 'MaterialIcons',
+                ),
                 color: Color(0XFF0F9E99),
                 size: 50,
               ),

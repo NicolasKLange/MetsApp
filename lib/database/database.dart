@@ -102,18 +102,18 @@ class DatabaseMethods {
     final querySnapshot = await metasCollection.get();
 
     return querySnapshot.docs.map((doc) {
+      int iconCode = doc['icon']; // Recupera o código do ícone como int
+
+      // Converte o código para IconData
+      IconData icon = IconData(iconCode, fontFamily: 'MaterialIcons');
+
       return {
         'id': doc.id,
         'nome_meta': doc['nome_meta'],
         'data_inicio': doc['data_inicio'],
         'data_fim': doc['data_fim'],
         'dias_meta': Map<String, bool>.from(doc['dias_meta']),
-        'icon': IconData(
-          doc.data().containsKey('icon')
-              ? doc['icon']
-              : Icons.help_outline.codePoint,
-          fontFamily: 'MaterialIcons',
-        ), // Converte o código de volta para IconData
+        'icon': icon, // Agora é um IconData, não um int
       };
     }).toList();
   }
