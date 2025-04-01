@@ -33,9 +33,7 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
   void initState() {
     super.initState();
     diasSelecionados = Map<String, bool>.from(widget.meta['dias_meta']);
-    diasSelecionados.updateAll(
-      (key, value) => false,
-    ); 
+    diasSelecionados.updateAll((key, value) => false);
   }
 
   Future<void> atualizarDiaMeta(
@@ -116,11 +114,18 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            Icon(
-              Icons.directions_run_rounded,
-              color: Color(0XFF0F9E99),
-              size: 50,
+            GestureDetector(
+              onTap: _showIconPicker,
+              child: Icon(
+                IconData(
+                  widget.meta['icon'] ?? Icons.help_outline.codePoint,
+                  fontFamily: 'MaterialIcons',
+                ),
+                color: Color(0XFF0F9E99),
+                size: 50,
+              ),
             ),
+
             const SizedBox(height: 30),
             // Dias da semana para realizar a meta
             Center(
@@ -251,9 +256,9 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
                   widget.userId,
                   widget.meta['id'],
                 );
-                Navigator.pop(context); // Volta para a tela anterior
+                Navigator.pop(context);
               },
-              icon: Icon(Icons.delete),
+              icon: Icon(Icons.delete, color: Color(0XFF0F9E99),),
             ),
           ],
         ),
@@ -261,6 +266,50 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
     );
   }
 
+  // Atualizar a página
+  void _atualizarIcone(String metaId, IconData icon) async {
+    await DatabaseMethods().updateMetaIcon(widget.userId, metaId, icon);
+    setState(() {
+      widget.meta['icon'] =
+          icon.codePoint; // Atualiza a interface com o novo ícone
+    });
+  }
+
+  // Função para abrir dialog com os icons para o usuario escolher
+  void _showIconPicker() {
+  List<IconData> icones = [
+    Icons.fitness_center,
+    Icons.directions_run,
+    Icons.book,
+    Icons.music_note,
+    Icons.work,
+    Icons.nature_people,
+  ];
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Escolha um ícone"),
+        content: Wrap(
+          spacing: 10,
+          children: icones.map((icon) {
+            return IconButton(
+              icon: Icon(icon, size: 40, color: Colors.teal),
+              onPressed: () {
+                _atualizarIcone(widget.meta['id'], icon);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ),
+      );
+    },
+  );
+}
+
+
+  // Função para calcular o progresso semanal da meta
   double calcularProgresso() {
     int totalDiasPlanejados =
         widget.meta['dias_meta'].values.where((v) => v == true).length;

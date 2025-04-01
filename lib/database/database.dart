@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class DatabaseMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -73,8 +74,25 @@ class DatabaseMethods {
       'nome_meta': nomeMeta,
       'data_inicio': DateTime.now().toIso8601String(),
       'data_fim': dataFim,
-      'dias_meta': diasMeta, // Agora salvamos um MAPA, não uma LISTA
+      'dias_meta': diasMeta,
+      'icon': Icons.help_outline, // Ícone padrão de interrogação
     });
+  }
+
+  // Alterar icon
+  Future<void> updateMetaIcon(
+    String userId,
+    String metaId,
+    IconData icon,
+  ) async {
+    final userDoc = _firestore.collection('Users').doc(userId);
+    final metaDoc = userDoc.collection('Metas').doc(metaId);
+
+    try {
+      await metaDoc.update({'icon': icon.codePoint});
+    } catch (e) {
+      print("Erro ao atualizar ícone: $e");
+    }
   }
 
   // Coletando todas as metas do usuário

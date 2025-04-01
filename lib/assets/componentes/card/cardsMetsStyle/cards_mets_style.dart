@@ -38,6 +38,7 @@ class CardMetsStyle extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          
           //Título da meta
           Text(
             title,
