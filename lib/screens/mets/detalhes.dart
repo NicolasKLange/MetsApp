@@ -35,7 +35,7 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
     diasSelecionados = Map<String, bool>.from(widget.meta['dias_meta']);
     diasSelecionados.updateAll(
       (key, value) => false,
-    ); // Definir todos os dias selecionados como desmarcados
+    ); 
   }
 
   Future<void> atualizarDiaMeta(
