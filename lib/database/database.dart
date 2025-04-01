@@ -75,7 +75,7 @@ class DatabaseMethods {
       'data_inicio': DateTime.now().toIso8601String(),
       'data_fim': dataFim,
       'dias_meta': diasMeta,
-      'icon': Icons.help_outline, // Ícone padrão de interrogação
+      'icon': Icons.help_outline.codePoint, // Ícone salvo como número
     });
   }
 
@@ -100,6 +100,7 @@ class DatabaseMethods {
     final userDoc = _firestore.collection('Users').doc(userId);
     final metasCollection = userDoc.collection('Metas');
     final querySnapshot = await metasCollection.get();
+
     return querySnapshot.docs.map((doc) {
       return {
         'id': doc.id,
@@ -107,6 +108,12 @@ class DatabaseMethods {
         'data_inicio': doc['data_inicio'],
         'data_fim': doc['data_fim'],
         'dias_meta': Map<String, bool>.from(doc['dias_meta']),
+        'icon': IconData(
+          doc.data().containsKey('icon')
+              ? doc['icon']
+              : Icons.help_outline.codePoint,
+          fontFamily: 'MaterialIcons',
+        ), // Converte o código de volta para IconData
       };
     }).toList();
   }

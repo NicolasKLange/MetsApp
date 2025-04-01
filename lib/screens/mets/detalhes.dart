@@ -101,32 +101,50 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
         automaticallyImplyLeading: false,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 30.0),
+        padding: const EdgeInsets.only(top: 70.0),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+
           children: [
-            Text(
-              widget.meta['nome_meta'],
-              style: TextStyle(
-                color: Color(0XFF0F9E99),
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: _showIconPicker,
-              child: Icon(
-                IconData(
-                  widget.meta['icon'] ?? Icons.help_outline.codePoint,
-                  fontFamily: 'MaterialIcons',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 170),
+                Text(
+                  widget.meta['nome_meta'],
+                  style: TextStyle(
+                    color: Color(0XFF0F9E99),
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                Spacer(),
+                //Deletar meta
+                IconButton(
+                  onPressed: () {
+                    _showDeleteConfirmationDialog(context);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Color.fromARGB(255, 65, 75, 74),
+                    size: 25,
+                  ),
+                ),
+                const SizedBox(width: 30),
+              ],
+            ),
+            const SizedBox(height: 30),
+            GestureDetector(
+              onTap: _showIconPicker, // Função para selecionar novo ícone
+              child: Icon(
+                widget.meta['icon'] ?? Icons.help_outline,
                 color: Color(0XFF0F9E99),
                 size: 50,
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
             // Dias da semana para realizar a meta
             Center(
               child: Wrap(
@@ -249,20 +267,65 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
                 ),
               ),
             ),
-            //Deletar meta
-            IconButton(
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Dialog para confirmar exclusão da meta
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color(0XFFEFE9E0),
+          title: Column(
+            children: [
+              Row(
+                children: [
+                  Text("Excluir Meta"),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.cancel_outlined, color: Color(0XFF0F9E99)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          content: Text("Tem certeza que deseja excluir esta meta?"),
+          actions: [
+            TextButton(
               onPressed: () async {
                 await DatabaseMethods().deleteMeta(
                   widget.userId,
                   widget.meta['id'],
                 );
-                Navigator.pop(context);
+                Navigator.pop(context); // Fecha o diálogo após a exclusão
               },
-              icon: Icon(Icons.delete, color: Color(0XFF0F9E99),),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0XFF0F9E99),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Text(
+                  'Excluir',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color(0XFFEFE9E0),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -277,37 +340,37 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
 
   // Função para abrir dialog com os icons para o usuario escolher
   void _showIconPicker() {
-  List<IconData> icones = [
-    Icons.fitness_center,
-    Icons.directions_run,
-    Icons.book,
-    Icons.music_note,
-    Icons.work,
-    Icons.nature_people,
-  ];
+    List<IconData> icones = [
+      Icons.fitness_center,
+      Icons.directions_run,
+      Icons.book,
+      Icons.music_note,
+      Icons.work,
+      Icons.nature_people,
+    ];
 
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text("Escolha um ícone"),
-        content: Wrap(
-          spacing: 10,
-          children: icones.map((icon) {
-            return IconButton(
-              icon: Icon(icon, size: 40, color: Colors.teal),
-              onPressed: () {
-                _atualizarIcone(widget.meta['id'], icon);
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
-        ),
-      );
-    },
-  );
-}
-
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Escolha um ícone"),
+          content: Wrap(
+            spacing: 10,
+            children:
+                icones.map((icon) {
+                  return IconButton(
+                    icon: Icon(icon, size: 40, color: Colors.teal),
+                    onPressed: () {
+                      _atualizarIcone(widget.meta['id'], icon);
+                      Navigator.pop(context);
+                    },
+                  );
+                }).toList(),
+          ),
+        );
+      },
+    );
+  }
 
   // Função para calcular o progresso semanal da meta
   double calcularProgresso() {
