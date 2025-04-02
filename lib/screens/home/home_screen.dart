@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mets_app/assets/componentes/card/cardsMetsStyle/cards_mets_style.dart';
 import 'package:mets_app/assets/componentes/navigation_bar/custom_navigation_bar.dart';
+import 'package:mets_app/database/database.dart';
 import 'package:mets_app/screens/mets/mets_screen.dart';
 import 'package:mets_app/screens/profile/profile_screen.dart';
 
@@ -15,11 +16,9 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-
-  // Instanciando o nome do usuário para mostrar na tela
   final user = FirebaseAuth.instance.currentUser!;
+  final DatabaseMethods _databaseMethods = DatabaseMethods();
 
-  // Coletando o Id do usuário
   Stream<DocumentSnapshot> get userStream {
     return FirebaseFirestore.instance
         .collection('Users')
@@ -31,7 +30,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFEFE9E0),
-      // Body da home screen
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,83 +38,97 @@ class _DashboardScreenState extends State<DashboardScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data!.exists) {
                 final userName = snapshot.data!['name'] ?? 'Usuário';
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Texto de boas vindas para o usuário
-                    Padding(
-                      padding: const EdgeInsets.only(left: 30.0, top: 70.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Seja bem-vindo',
-                            style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0XFF0F9E99),
-                            ),
-                          ),
-                          // Nome do usuário salvo no Firebase
-                          Text(
-                            userName,
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w300,
-                              color: Color(0XFF0F9E99),
-                            ),
-                          ),
-                        ],
+                return Padding(
+                  padding: const EdgeInsets.only(left: 30.0, top: 70.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Seja bem-vindo',
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0XFF0F9E99),
+                        ),
                       ),
-                    ),
-                  ],
+                      Text(
+                        userName,
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w300,
+                          color: Color(0XFF0F9E99),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else {
-                return const Text(
-                  'Carregando...',
-                  style: TextStyle(fontSize: 16, color: Color(0xFFEDE8E8)),
+                return const Padding(
+                  padding: EdgeInsets.only(left: 30, top: 70),
+                  child: Text(
+                    'Carregando...',
+                    style: TextStyle(fontSize: 16, color: Color(0xFF0F9E99)),
+                  ),
                 );
               }
             },
           ),
           const SizedBox(height: 100),
-          // Metas do usuário
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, right: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Suas metas para o ano de 2025',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0XFF0F9E99),
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Text(
+              'Suas metas para o ano de 2025',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                color: Color(0XFF0F9E99),
+              ),
             ),
           ),
-          // Lista das metas do usuário
           Expanded(
-            child: ListView(
-              children: [
-                CardMetsStyle(
-                  title: 'Atividades Físicas',
-                  startDate: '05/02/2025',
-                  endDate: '30/08/2025',
-                ),
-                CardMetsStyle(
-                  title: 'Leitura',
-                  startDate: '01/01/2025',
-                  endDate: '30/12/2025',
-                ),
-              ],
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: _databaseMethods.getMetas(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'Nenhuma meta cadastrada.',
+                      style: TextStyle(fontSize: 18, color: Color(0XFF0F9E99)),
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    final meta = snapshot.data![index];
+                    return CardMetsStyle(
+                      title: meta['nome_meta'],
+                      startDate: formatDate(meta['data_inicio']),
+                      endDate: formatDate(meta['data_fim']),
+                      progress: calculateProgress(meta['dias_meta']),
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
       ),
     );
+  }
+
+  double calculateProgress(Map<String, bool> diasMeta) {
+    int totalDias = diasMeta.length;
+    int diasConcluidos = diasMeta.values.where((done) => done).length;
+    return diasConcluidos / totalDias;
+  }
+
+  String formatDate(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+    return "\${parsedDate.day.toString().padLeft(2, '0')}/\${parsedDate.month.toString().padLeft(2, '0')}/\${parsedDate.year}";
   }
 }
 

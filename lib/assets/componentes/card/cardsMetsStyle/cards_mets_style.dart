@@ -5,27 +5,24 @@ class CardMetsStyle extends StatelessWidget {
   final String title;
   final String startDate;
   final String endDate;
+  final double progress;
 
   const CardMetsStyle({
     Key? key,
     required this.title,
     required this.startDate,
     required this.endDate,
+    required this.progress,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-        right: 30,
-        left: 30,
-        top: 20,
-      ), // Espaço externo do card
-      padding: EdgeInsets.all(15), // Espaço interno do card
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Color(0xFFEFE9E0),
         borderRadius: BorderRadius.circular(15),
-        //Sombra do card
         boxShadow: [
           BoxShadow(
             color: Colors.black45.withOpacity(0.4),
@@ -38,8 +35,6 @@ class CardMetsStyle extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
-          //Título da meta
           Text(
             title,
             style: TextStyle(
@@ -49,7 +44,6 @@ class CardMetsStyle extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          //Dias de inicio e fim da meta
           Row(
             children: [
               Text(
@@ -63,17 +57,18 @@ class CardMetsStyle extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          //Linha de progressão da meta
-          Container(
-            height: 4,
-            decoration: BoxDecoration(
-              color: Color(0xFF0F9E99),
-              borderRadius: BorderRadius.circular(10),
-            ),
+          SizedBox(height: 10),
+          LinearProgressIndicator(
+            value: progress,
+            backgroundColor: Colors.grey.shade300,
+            color: Color(0xFF0F9E99),
+            minHeight: 5,
+            borderRadius: BorderRadius.circular(10),
           ),
         ],
       ),
     );
   }
 }
+
+

@@ -127,7 +127,7 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
                   },
                   icon: Icon(
                     Icons.delete,
-                    color: Color.fromARGB(255, 65, 75, 74),
+                    color: Color(0XFF0F9E99),
                     size: 25,
                   ),
                 ),
