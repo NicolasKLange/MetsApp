@@ -228,7 +228,8 @@ class _MetsScreen extends State<MetsScreen> {
   // Atualização na função createMets para salvar a meta
   Future<String?> createMets(BuildContext context) async {
     TextEditingController nameMetsController = TextEditingController();
-    TextEditingController dateMetsController = TextEditingController();
+    TextEditingController dateFinishMetsController = TextEditingController();
+    TextEditingController dateStartMetsController = TextEditingController();
     List<String> selectedDays = [];
 
     return showDialog<String>(
@@ -279,9 +280,9 @@ class _MetsScreen extends State<MetsScreen> {
                   ),
                   SizedBox(height: 10),
                   TextField(
-                    controller: dateMetsController,
+                    controller: dateStartMetsController,
                     decoration: InputDecoration(
-                      hintText: 'Data início da meta',
+                      hintText: 'Data inicio da meta',
                       border: InputBorder.none,
                     ),
                     inputFormatters: [MaskedInputFormatter('00/00/0000')],
@@ -289,7 +290,7 @@ class _MetsScreen extends State<MetsScreen> {
                   
                   SizedBox(height: 10),
                   TextField(
-                    controller: dateMetsController,
+                    controller: dateFinishMetsController,
                     decoration: InputDecoration(
                       hintText: 'Data final da meta',
                       border: InputBorder.none,
@@ -360,10 +361,12 @@ class _MetsScreen extends State<MetsScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (nameMetsController.text.isNotEmpty &&
-                        dateMetsController.text.isNotEmpty) {
+                        dateStartMetsController.text.isNotEmpty &&
+                        dateFinishMetsController.text.isNotEmpty) {
                       await DatabaseMethods().saveMeta(
                         nameMetsController.text,
-                        dateMetsController.text,
+                        dateStartMetsController.text,
+                        dateFinishMetsController.text,
                         selectedDays,
                       );
                       setState(() {}); // Atualiza a tela

@@ -106,8 +106,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     final meta = snapshot.data![index];
                     return CardMetsStyle(
                       title: meta['nome_meta'],
-                      startDate: formatDate(meta['data_inicio']),
-                      endDate: formatDate(meta['data_fim']),
+                      startDate: meta['data_inicio'],
+                      endDate: meta['data_fim'],
                       progress: calculateProgress(meta['dias_meta']),
                     );
                   },
@@ -126,10 +126,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return diasConcluidos / totalDias;
   }
 
-  String formatDate(String dateTime) {
-    DateTime parsedDate = DateTime.parse(dateTime);
-    return "\${parsedDate.day.toString().padLeft(2, '0')}/\${parsedDate.month.toString().padLeft(2, '0')}/\${parsedDate.year}";
-  }
 }
 
 

@@ -48,6 +48,7 @@ class DatabaseMethods {
 
   Future<void> saveMeta(
     String nomeMeta,
+    String dataInicio,
     String dataFim,
     List<String> diasSelecionados, // Lista de dias selecionados
   ) async {
@@ -72,10 +73,10 @@ class DatabaseMethods {
 
     await metasCollection.add({
       'nome_meta': nomeMeta,
-      'data_inicio': DateTime.now().toIso8601String(),
+      'data_inicio': dataInicio,
       'data_fim': dataFim,
       'dias_meta': diasMeta,
-      'icon': Icons.help_outline.codePoint, // Ícone salvo como número
+      'icon': Icons.help_outline.codePoint,
     });
   }
 
@@ -113,7 +114,7 @@ class DatabaseMethods {
         'data_inicio': doc['data_inicio'],
         'data_fim': doc['data_fim'],
         'dias_meta': Map<String, bool>.from(doc['dias_meta']),
-        'icon': icon, // Agora é um IconData, não um int
+        'icon': icon, 
       };
     }).toList();
   }
