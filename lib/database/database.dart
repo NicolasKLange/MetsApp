@@ -81,20 +81,15 @@ class DatabaseMethods {
   }
 
   // Alterar icon
-  Future<void> updateMetaIcon(
-    String userId,
-    String metaId,
-    IconData icon,
-  ) async {
-    final userDoc = _firestore.collection('Users').doc(userId);
-    final metaDoc = userDoc.collection('Metas').doc(metaId);
+  Future<void> updateMetaIcon(String userId, String metaId, IconData icon) async {
+  await FirebaseFirestore.instance
+      .collection('Users')
+      .doc(userId)
+      .collection('Metas')
+      .doc(metaId)
+      .update({'icon': icon.codePoint});
+}
 
-    try {
-      await metaDoc.update({'icon': icon.codePoint});
-    } catch (e) {
-      print("Erro ao atualizar ícone: $e");
-    }
-  }
 
   // Coletando todas as metas do usuário
   Future<List<Map<String, dynamic>>> getMetas() async {

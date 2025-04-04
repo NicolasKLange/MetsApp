@@ -85,6 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 20,),
           Expanded(
             child: FutureBuilder<List<Map<String, dynamic>>>(
               future: _databaseMethods.getMetas(),

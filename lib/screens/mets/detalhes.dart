@@ -29,11 +29,28 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
   ];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> carregarMeta() async {
+    final metaDoc =
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(widget.userId)
+            .collection('Metas')
+            .doc(widget.meta['id'])
+            .get();
+
+    if (metaDoc.exists) {
+      setState(() {
+        widget.meta.addAll(metaDoc.data()!);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     diasSelecionados = Map<String, bool>.from(widget.meta['dias_meta']);
     diasSelecionados.updateAll((key, value) => false);
+    carregarMeta();
   }
 
   Future<void> atualizarDiaMeta(
@@ -110,7 +127,7 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(width: 170),
+                const SizedBox(width: 140),
                 Text(
                   widget.meta['nome_meta'],
                   style: TextStyle(
@@ -125,11 +142,7 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
                   onPressed: () {
                     _showDeleteConfirmationDialog(context);
                   },
-                  icon: Icon(
-                    Icons.delete,
-                    color: Color(0XFF0F9E99),
-                    size: 25,
-                  ),
+                  icon: Icon(Icons.delete, color: Color(0XFF0F9E99), size: 25),
                 ),
                 const SizedBox(width: 30),
               ],
@@ -139,9 +152,12 @@ class _MetaDetalhesScreenState extends State<MetaDetalhesScreen> {
               onTap: _showIconPicker,
               child: Icon(
                 IconData(
-                  widget.meta['icon'] ?? Icons.help_outline.codePoint,
+                  widget.meta['icon'] != null
+                      ? widget.meta['icon'] as int
+                      : Icons.help_outline.codePoint,
                   fontFamily: 'MaterialIcons',
                 ),
+
                 color: Color(0XFF0F9E99),
                 size: 50,
               ),
