@@ -281,6 +281,16 @@ class _MetsScreen extends State<MetsScreen> {
                   TextField(
                     controller: dateMetsController,
                     decoration: InputDecoration(
+                      hintText: 'Data início da meta',
+                      border: InputBorder.none,
+                    ),
+                    inputFormatters: [MaskedInputFormatter('00/00/0000')],
+                  ),
+                  
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: dateMetsController,
+                    decoration: InputDecoration(
                       hintText: 'Data final da meta',
                       border: InputBorder.none,
                     ),
